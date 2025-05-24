@@ -7,8 +7,7 @@
 int main() {
     SetConsoleOutputCP(CP_UTF8);
 
-    const char IN_VARS[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-    const char OUT_VARS[] = {'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'};
+    const char IN_VARS[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     bool latex_mode = false;
     std::cout << "latex view (y / n) >> ";
@@ -20,11 +19,10 @@ int main() {
     const std::string TRUTH_STR = trim(read_file("../input-file"));
 
     const size_t IN_LEN = TRUTH_STR.find(':');
-    const size_t OUT_LEN = TRUTH_STR.find('\n') - (TRUTH_STR.find(':') + 1);
     const size_t HEIGHT = IN_LEN * IN_LEN;
 
     std::vector<std::vector<int>> in_vect;
-    std::vector<std::vector<int>> out_vect;
+    std::vector<int> out_vect;
 
     for (size_t i = 0; i < HEIGHT; ++i) {
         std::vector<int> vec;
@@ -36,42 +34,31 @@ int main() {
     }
 
     for (size_t i = 0; i < HEIGHT; ++i) {
-        std::vector<int> vec;
         size_t n = find_nth(TRUTH_STR, ':', i) + 1;
-        for (size_t j = 0; j < OUT_LEN; ++j) {
-            vec.push_back(TRUTH_STR.at(n + j) - '0');
-        }
-        out_vect.push_back(vec);
+        out_vect.push_back(TRUTH_STR.at(n) - '0');
     }
 
-    std::vector<std::string> notations;
+    std::string notation;
+    for (size_t i = 0; i < HEIGHT; ++i) {
+        if (out_vect[i] == 0) continue;
 
-    for (size_t i = 0; i < OUT_LEN; ++i) {
-        std::string str;
-        for (size_t j = 0; j < HEIGHT; ++j) {
-            if (out_vect[j][i] == 0) continue;
-
-            for (size_t k = 0; k < IN_LEN; ++k) {
-                if (in_vect[j][k] != 0) {
-                    str.push_back(IN_VARS[k]);
-                    continue;
-                }
-                if (!latex_mode){
-                    str.append("\\overline{");
-                    str.push_back(IN_VARS[k]);
-                    str.append("}");
-                    continue;
-                }
-                str.push_back(IN_VARS[k]);
-                str.append("\u0305");
+        for (size_t j = 0; j < IN_LEN; ++j) {
+            if (in_vect[i][j] != 0) {
+                notation.push_back(IN_VARS[j]);
+                continue;
             }
-            str.push_back('+');
+            if (!latex_mode){
+                notation.append("\\overline{");
+                notation.push_back(IN_VARS[j]);
+                notation.append("}");
+                continue;
+            }
+            notation.push_back(IN_VARS[j]);
+            notation.append("\u0305");
         }
-        if (!str.empty()) str.pop_back();
-        notations.push_back(str);
+        notation.push_back('+');
     }
+    if (!notation.empty()) notation.pop_back();
 
-    for (size_t k = 0; k < OUT_LEN; k++) {
-        std::cout << OUT_VARS[k] << " = " << notations[k] << "\n";
-    }
+    std::cout << notation << "\n";
 }
