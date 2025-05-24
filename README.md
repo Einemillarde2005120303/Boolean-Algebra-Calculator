@@ -14,4 +14,4 @@
 | **Double Negation Law** | `(P')' = P` | `(P')' = P` |
 | **Absorption Law** | `P + (P ⋅ Q) = P` | `P ⋅ (P + Q) = P` |
 
-source: [https://www.geeksforgeeks.org/boolean-algebra/]
+source: https://www.geeksforgeeks.org/boolean-algebra/
